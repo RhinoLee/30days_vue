@@ -1,14 +1,20 @@
 <script setup>
+import { ref } from 'vue'
 import HelloWorld from './components/HelloWorld.vue'
 import TheWelcome from './components/TheWelcome.vue'
+
+const isHelloWorldVisible = ref(true)
+function toggleHelloWorld() {
+  isHelloWorldVisible.value = !isHelloWorldVisible.value
+}
 </script>
 
 <template>
   <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
+    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" @click="toggleHelloWorld">
 
     <div class="wrapper">
-      <HelloWorld msg="You did it!" />
+      <HelloWorld v-if="isHelloWorldVisible" />
     </div>
   </header>
 
