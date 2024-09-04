@@ -11,6 +11,7 @@ const UseMouseBuiltinExtractors = {
 export function useMouse(options = {}) {
   const {
     type = 'page',
+    touch = true,
     initialValue = { x: 0, y: 0 },
     window = defaultWindow,
     target = window,
@@ -32,11 +33,24 @@ export function useMouse(options = {}) {
     }
   }
 
+  const touchHandler = (event) => {
+    if (event.touches.length > 0) {
+      const result = extractor(event.touches[0])
+      if (result) {
+        [x.value, y.value] = result
+      }
+    }
+  }
+
   const mouseHandlerWrapper = event => mouseHandler(event)
+  const touchHandlerWrapper = event => touchHandler(event)
 
   if (target) {
     const listenerOptions = { passive: true }
     useEventListener(target, ['mousemove', 'dragover'], mouseHandlerWrapper, listenerOptions)
+    if (touch && type !== 'movement') {
+      useEventListener(target, ['touchstart', 'touchmove'], touchHandlerWrapper, listenerOptions)
+    }
   }
 
   return {
