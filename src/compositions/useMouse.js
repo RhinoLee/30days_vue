@@ -19,6 +19,7 @@ export function useMouse(options = {}) {
 
   const x = ref(initialValue.x)
   const y = ref(initialValue.y)
+  const sourceType = ref(null)
 
   // type 可以傳入客製化選項，像是官網範例就是用 (event) => [event.offsetX, event.offsetY] 來取得 offset 數值
   const extractor = typeof type === 'function'
@@ -30,6 +31,7 @@ export function useMouse(options = {}) {
 
     if (result) {
       [x.value, y.value] = result
+      sourceType.value = 'mouse'
     }
   }
 
@@ -38,6 +40,7 @@ export function useMouse(options = {}) {
       const result = extractor(event.touches[0])
       if (result) {
         [x.value, y.value] = result
+        sourceType.value = 'touch'
       }
     }
   }
@@ -56,5 +59,6 @@ export function useMouse(options = {}) {
   return {
     x,
     y,
+    sourceType,
   }
 }

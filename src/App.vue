@@ -5,7 +5,7 @@ import TheWelcome from './components/TheWelcome.vue'
 import { useMouse } from '@/compositions/useMouse'
 
 const isHelloWorldVisible = ref(true)
-const { x, y } = useMouse()
+const { x, y, sourceType } = useMouse()
 
 function toggleHelloWorld() {
   isHelloWorldVisible.value = !isHelloWorldVisible.value
@@ -25,6 +25,7 @@ function toggleHelloWorld() {
     <TheWelcome />
     <div>x: {{ x }}</div>
     <div>y: {{ y }}</div>
+    <div>sourceType: {{ sourceType }}</div>
   </main>
 </template>
 
