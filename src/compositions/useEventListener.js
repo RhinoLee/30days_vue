@@ -1,8 +1,6 @@
 import { getCurrentScope, onScopeDispose, unref, watch } from 'vue'
-import { noop } from '@/helper'
+import { defaultWindow, noop } from '@/helper'
 
-export const isClient = typeof window !== 'undefined' && typeof document !== 'undefined'
-export const defaultWindow = isClient ? window : undefined
 const toString = Object.prototype.toString
 export function isObject(val) {
   return toString.call(val) === '[object Object]'

@@ -2,8 +2,11 @@
 import { ref } from 'vue'
 import HelloWorld from './components/HelloWorld.vue'
 import TheWelcome from './components/TheWelcome.vue'
+import { useMouse } from '@/compositions/useMouse'
 
 const isHelloWorldVisible = ref(true)
+const { x, y, sourceType } = useMouse()
+
 function toggleHelloWorld() {
   isHelloWorldVisible.value = !isHelloWorldVisible.value
 }
@@ -20,6 +23,9 @@ function toggleHelloWorld() {
 
   <main>
     <TheWelcome />
+    <div>x: {{ x }}</div>
+    <div>y: {{ y }}</div>
+    <div>sourceType: {{ sourceType }}</div>
   </main>
 </template>
 
