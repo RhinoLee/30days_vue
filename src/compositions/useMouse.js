@@ -13,6 +13,7 @@ export function useMouse(options = {}) {
     type = 'page',
     touch = true,
     initialValue = { x: 0, y: 0 },
+    resetOnTouchEnds = false,
     window = defaultWindow,
     target = window,
     scroll = true,
@@ -59,6 +60,11 @@ export function useMouse(options = {}) {
     }
   }
 
+  const reset = () => {
+    x.value = initialValue.x
+    y.value = initialValue.y
+  }
+
   const mouseHandlerWrapper = event => mouseHandler(event)
   const touchHandlerWrapper = event => touchHandler(event)
   const scrollHandlerWrapper = event => scrollHandler(event)
@@ -68,6 +74,9 @@ export function useMouse(options = {}) {
     useEventListener(target, ['mousemove', 'dragover'], mouseHandlerWrapper, listenerOptions)
     if (touch && type !== 'movement') {
       useEventListener(target, ['touchstart', 'touchmove'], touchHandlerWrapper, listenerOptions)
+      if (resetOnTouchEnds) {
+        useEventListener(target, 'touchend', reset, listenerOptions)
+      }
     }
     if (scroll && type === 'page')
       useEventListener(window, 'scroll', scrollHandlerWrapper, listenerOptions)
