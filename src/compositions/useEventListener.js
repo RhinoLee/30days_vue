@@ -1,21 +1,9 @@
-import { getCurrentScope, onScopeDispose, unref, watch } from 'vue'
-import { defaultWindow, noop } from '@/helper'
+import { getCurrentScope, onScopeDispose, watch } from 'vue'
+import { defaultWindow, noop, toValue, unrefElement } from '@/helper'
 
 const toString = Object.prototype.toString
 export function isObject(val) {
   return toString.call(val) === '[object Object]'
-}
-
-export function toValue(r) {
-  return typeof r === 'function'
-    ? r()
-    : unref(r)
-}
-
-export function unrefElement(elRef) {
-  const plain = toValue(elRef)
-  // 有 $el 的話是 vue component
-  return plain?.$el ?? plain
 }
 
 export function tryOnScopeDispose(fn) {
