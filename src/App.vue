@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import HelloWorld from './components/HelloWorld.vue'
 import TheWelcome from './components/TheWelcome.vue'
 import UseMouseInElementDemo from './components/UseMouseInElementDemo.vue'
+import UseThrottleFnDemo from './components/UseThrottleFnDemo.vue'
 import { useMouse } from '@/compositions/useMouse'
 
 const isHelloWorldVisible = ref(true)
@@ -29,6 +30,7 @@ function toggleHelloWorld() {
     <div>sourceType: {{ sourceType }}</div>
 
     <UseMouseInElementDemo />
+    <UseThrottleFnDemo />
   </main>
 </template>
 
