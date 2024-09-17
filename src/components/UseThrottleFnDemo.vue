@@ -7,7 +7,7 @@ const updated = ref(0)
 
 const throttledFn = useThrottleFn(() => {
   updated.value += 1
-})
+}, 1000)
 
 function clickHandler() {
   clicked.value += 1
