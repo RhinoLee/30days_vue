@@ -1,5 +1,8 @@
-import { throttleFilter } from '@/utils/filter'
+import { createFilterWrapper, throttleFilter } from '@/utils/filter'
 
-export function useThrottleFn(fn, ms) {
-  return throttleFilter(fn, ms)
+export function useThrottleFn(fn, ms, trailing = false, leading = true) {
+  return createFilterWrapper(
+    throttleFilter(ms, trailing, leading),
+    fn,
+  )
 }

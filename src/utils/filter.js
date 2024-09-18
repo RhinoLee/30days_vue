@@ -1,9 +1,17 @@
-export function throttleFilter(fn, ms, trailing = false, leading = false) {
+export function createFilterWrapper(filter, fn) {
+  function wrapper(...args) {
+    filter(() => fn.apply(this, args), { fn, this: this, args })
+  };
+
+  return wrapper
+}
+
+export function throttleFilter(ms, trailing = false, leading = false) {
   let lastExec = 0
   let timer = null
   let isLeading = true
 
-  return function () {
+  return function (invoke) {
     const duration = Date.now() - lastExec
 
     if (timer) {
@@ -13,12 +21,12 @@ export function throttleFilter(fn, ms, trailing = false, leading = false) {
 
     if (duration >= ms && (leading || !isLeading)) {
       lastExec = Date.now()
-      fn()
+      invoke()
     }
     else if (trailing) {
       timer = setTimeout(() => {
         lastExec = Date.now()
-        fn()
+        invoke()
         clearTimeout(timer)
         timer = null
       }, ms - duration)

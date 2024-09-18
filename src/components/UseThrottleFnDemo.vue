@@ -5,13 +5,17 @@ import { useThrottleFn } from '@/compositions/useThrottleFn'
 const clicked = ref(0)
 const updated = ref(0)
 
-const throttledFn = useThrottleFn(() => {
+function updateValue() {
+  console.log('this: ', this) // {}
   updated.value += 1
-}, 2000)
+}
+
+const throttledFn = useThrottleFn(updateValue, 2000)
 
 function clickHandler() {
   clicked.value += 1
-  throttledFn()
+  const testThis = {}
+  throttledFn.apply(testThis)
 }
 </script>
 
