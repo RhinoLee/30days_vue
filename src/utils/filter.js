@@ -1,35 +1,53 @@
 export function createFilterWrapper(filter, fn) {
   function wrapper(...args) {
-    filter(() => fn.apply(this, args), { fn, this: this, args })
+    return new Promise((resolve, reject) => {
+      Promise.resolve(filter(() => fn.apply(this, args), { fn, this: this, args }))
+        .then(resolve)
+        .catch(reject)
+    })
   };
 
   return wrapper
 }
 
-export function throttleFilter(ms, trailing = false, leading = false) {
+export function throttleFilter(ms, trailing = false, leading = false, rejectOnCancel = false) {
+  const noop = () => {}
   let lastExec = 0
-  let timer = null
+  let timer
   let isLeading = true
+  let lastValue
+  let lastRejector = noop
 
-  return function (invoke) {
-    const duration = Date.now() - lastExec
-
+  const clear = () => {
     if (timer) {
       clearTimeout(timer)
-      timer = null
+      timer = undefined
+      lastRejector()
+      lastRejector = noop
     }
+  }
+
+  return function (_invoke) {
+    const duration = Date.now() - lastExec
+    const invoke = () => {
+      return lastValue = _invoke()
+    }
+
+    clear()
 
     if (duration >= ms && (leading || !isLeading)) {
       lastExec = Date.now()
       invoke()
     }
     else if (trailing) {
-      timer = setTimeout(() => {
-        lastExec = Date.now()
-        invoke()
-        clearTimeout(timer)
-        timer = null
-      }, ms - duration)
+      lastValue = new Promise((resolve, reject) => {
+        lastRejector = rejectOnCancel ? reject : resolve
+        timer = setTimeout(() => {
+          lastExec = Date.now()
+          resolve(invoke())
+          clear()
+        }, ms - duration)
+      })
     }
 
     if (!leading && !timer) {
@@ -39,5 +57,6 @@ export function throttleFilter(ms, trailing = false, leading = false) {
     }
 
     isLeading = false
+    return lastValue
   }
 }

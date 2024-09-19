@@ -2,7 +2,7 @@
 import { useEventListener } from '@/compositions/useEventListener'
 
 useEventListener(document, 'click', () => {
-  console.log('click the document')
+  // console.log('click the document')
 })
 </script>
 

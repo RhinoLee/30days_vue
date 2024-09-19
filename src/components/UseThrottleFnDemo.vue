@@ -10,12 +10,20 @@ function updateValue() {
   updated.value += 1
 }
 
-const throttledFn = useThrottleFn(updateValue, 2000)
+// traling 要是 true，rejectOnCancel 才會有效果
+const throttledFn = useThrottleFn(updateValue, 3000, true, true, true)
 
-function clickHandler() {
+async function clickHandler() {
   clicked.value += 1
   const testThis = {}
-  throttledFn.apply(testThis)
+  try {
+    throttledFn.apply(testThis)
+    console.log('after throttledFn()')
+  }
+  catch {
+    // 連續觸發時，上一次觸發被 throttle cancel 掉，目標是可以在這邊獲得通知
+    console.error('cancel')
+  }
 }
 </script>
 
