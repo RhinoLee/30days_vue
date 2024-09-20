@@ -11,7 +11,7 @@ function updateValue() {
 }
 
 // traling 要是 true，rejectOnCancel 才會有效果
-const throttledFn = useThrottleFn(updateValue, 3000, true, true, true)
+const throttledFn = useThrottleFn(updateValue, 3000, true, false)
 
 async function clickHandler() {
   clicked.value += 1

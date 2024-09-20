@@ -10,7 +10,7 @@ export function createFilterWrapper(filter, fn) {
   return wrapper
 }
 
-export function throttleFilter(ms, trailing = false, leading = false, rejectOnCancel = false) {
+export function throttleFilter(ms, trailing = true, leading = true, rejectOnCancel = false) {
   const noop = () => {}
   let lastExec = 0
   let timer
@@ -46,7 +46,7 @@ export function throttleFilter(ms, trailing = false, leading = false, rejectOnCa
           lastExec = Date.now()
           resolve(invoke())
           clear()
-        }, ms - duration)
+        }, Math.max(0, ms - duration))
       })
     }
 
