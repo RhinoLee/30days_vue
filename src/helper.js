@@ -13,6 +13,6 @@ export function toValue(r) {
 
 export function unrefElement(elRef) {
   const plain = toValue(elRef)
-  // 有 $el 的話是 vue component
+  // 有 $el 的話是 vue component instance
   return plain?.$el ?? plain
 }
