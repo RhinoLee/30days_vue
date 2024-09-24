@@ -14,21 +14,21 @@ export function tryOnScopeDispose(fn) {
   return false
 }
 
-export function useEventListener(target, event, listener, options) {
-  let _target
+export function useEventListener(...args) {
+  let target
   let events
   let listeners
-  let _options = options
+  let options
 
-  if (typeof target === 'string' || Array.isArray(target)) {
-    _target = defaultWindow
+  if (typeof args[0] === 'string' || Array.isArray(args[0])) {
+    [events, listeners, options] = args
+    target = defaultWindow
   }
-  _target = target
-  events = event
-  listeners = listener
-  _options = options
+  else {
+    [target, events, listeners, options] = args
+  }
 
-  if (!_target)
+  if (!target)
     return noop
 
   if (!Array.isArray(events))
@@ -49,7 +49,7 @@ export function useEventListener(target, event, listener, options) {
   }
 
   const stopWatch = watch(
-    () => [unrefElement(target), toValue(_options)],
+    () => [unrefElement(target), toValue(options)],
     ([el, options]) => {
       cleanup()
       if (!el)
