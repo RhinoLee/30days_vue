@@ -17,6 +17,7 @@ export function useMouse(options = {}) {
     window = defaultWindow,
     target = window,
     scroll = true,
+    eventFilter,
   } = options
 
   const x = ref(initialValue.x)
@@ -65,9 +66,17 @@ export function useMouse(options = {}) {
     y.value = initialValue.y
   }
 
-  const mouseHandlerWrapper = event => mouseHandler(event)
-  const touchHandlerWrapper = event => touchHandler(event)
-  const scrollHandlerWrapper = event => scrollHandler(event)
+  const mouseHandlerWrapper = eventFilter
+    ? event => eventFilter(() => mouseHandler(event), {})
+    : event => mouseHandler(event)
+
+  const touchHandlerWrapper = eventFilter
+    ? event => eventFilter(() => touchHandler(event), {})
+    : event => touchHandler(event)
+
+  const scrollHandlerWrapper = eventFilter
+    ? () => eventFilter(() => scrollHandler(), {})
+    : () => scrollHandler()
 
   if (target) {
     const listenerOptions = { passive: true }
