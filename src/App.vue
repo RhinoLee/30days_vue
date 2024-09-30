@@ -7,6 +7,7 @@ import UseThrottleFnDemo from './components/UseThrottleFnDemo.vue'
 import useMountedDemo from './components/useMountedDemo.vue'
 import UseDeviceOrientationDemo from './components/UseDeviceOrientationDemo.vue'
 import UseScreenOrientationDemo from './components/UseScreenOrientationDemo.vue'
+import UseParallaxDemo from './components/UseParallaxDemo.vue'
 import { useMouse } from '@/compositions/useMouse'
 
 const isHelloWorldVisible = ref(true)
@@ -37,6 +38,7 @@ function toggleHelloWorld() {
     <useMountedDemo />
     <UseDeviceOrientationDemo />
     <UseScreenOrientationDemo />
+    <UseParallaxDemo />
   </main>
 </template>
 
