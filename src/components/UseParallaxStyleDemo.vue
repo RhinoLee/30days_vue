@@ -31,6 +31,9 @@ const cardStyle = computed(() => ({
   overflow: 'hidden',
   transition: '.3s ease-out all',
   boxShadow: '0 0 20px 0 rgba(255, 255, 255, 0.25)',
+  transform: `rotateX(${parallax.roll * 20}deg) rotateY(${
+    parallax.tilt * 20
+  }deg)`,
 }))
 
 // 卡片內部的小視窗，子元素圖片都會在視窗裡呈現
@@ -55,18 +58,30 @@ const layerBase = {
 
 const layer0 = computed(() => ({
   ...layerBase,
+  transform: `translateX(${parallax.tilt * 10}px) translateY(${
+    parallax.roll * 10
+  }px) scale(1.33)`,
 }))
 
 const layer1 = computed(() => ({
   ...layerBase,
+  transform: `translateX(${parallax.tilt * 20}px) translateY(${
+    parallax.roll * 20
+  }px) scale(1.33)`,
 }))
 
 const layer2 = computed(() => ({
   ...layerBase,
+  transform: `translateX(${parallax.tilt * 30}px) translateY(${
+    parallax.roll * 30
+  }px) scale(1.33)`,
 }))
 
 const layer3 = computed(() => ({
   ...layerBase,
+  transform: `translateX(${parallax.tilt * 40}px) translateY(${
+    parallax.roll * 40
+  }px) scale(1.33)`,
 }))
 
 const layer4 = layerBase
