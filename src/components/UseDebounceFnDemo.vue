@@ -10,7 +10,7 @@ function updateValue() {
   updated.value += 1
 }
 
-const debounceFn = useDebounceFn(updateValue, 1000, { maxWait: 5000, rejectOnCancel: true })
+const debounceFn = useDebounceFn(updateValue, 1000, { maxWait: 5000, rejectOnCancel: false })
 
 async function clickHandler() {
   clicked.value += 1
