@@ -1,3 +1,5 @@
+import { noop, toValue } from '@/helper'
+
 export function createFilterWrapper(filter, fn) {
   function wrapper(...args) {
     return new Promise((resolve, reject) => {
@@ -11,7 +13,6 @@ export function createFilterWrapper(filter, fn) {
 }
 
 export function throttleFilter(ms, trailing = true, leading = true, rejectOnCancel = false) {
-  const noop = () => {}
   let lastExec = 0
   let timer
   let isLeading = true
@@ -59,4 +60,37 @@ export function throttleFilter(ms, trailing = true, leading = true, rejectOnCanc
     isLeading = false
     return lastValue
   }
+}
+
+export function debounceFilter(ms, options) {
+  let timer
+  let lastRejector
+
+  const _clearTimeout = (timer) => {
+    clearTimeout(timer)
+    lastRejector()
+    lastRejector = noop
+  }
+
+  const filter = (invoke) => {
+    const duration = toValue(ms)
+
+    // 每次 filter 被觸發，就要先清空 timer，重新計算 timeout，因為只需要拿最後一次的 setTimeout 執行
+    if (timer)
+      _clearTimeout(timer)
+
+    if (duration <= 0) {
+      return Promise.resolve(invoke())
+    }
+
+    return new Promise((resolve, reject) => {
+      lastRejector = options.rejectOnCancel ? reject : resolve
+
+      timer = setTimeout(() => {
+        resolve(invoke())
+      }, duration)
+    })
+  }
+
+  return filter
 }
