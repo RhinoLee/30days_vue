@@ -62,7 +62,7 @@ export function throttleFilter(ms, trailing = true, leading = true, rejectOnCanc
   }
 }
 
-export function debounceFilter(ms, options) {
+export function debounceFilter(ms, options = {}) {
   let timer
   let maxTimer
   let lastRejector
