@@ -10,6 +10,7 @@ import UseScreenOrientationDemo from './components/UseScreenOrientationDemo.vue'
 import UseParallaxDemo from './components/UseParallaxDemo.vue'
 import UseParallaxStyleDemo from './components/UseParallaxStyleDemo.vue'
 import UseDebounceFnDemo from './components/UseDebounceFnDemo.vue'
+import UseScrollDemo from './components/UseScrollDemo.vue'
 import { useMouse } from '@/compositions/useMouse'
 
 const isHelloWorldVisible = ref(true)
@@ -43,6 +44,7 @@ function toggleHelloWorld() {
     <UseParallaxDemo />
     <UseParallaxStyleDemo />
     <UseDebounceFnDemo />
+    <UseScrollDemo />
   </main>
 </template>
 
