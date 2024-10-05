@@ -1,9 +1,10 @@
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, ref, toRefs } from 'vue'
 import { useScroll } from '@/compositions/useScroll'
 
 const el = ref(null)
-const { x, y } = useScroll(el)
+const { x, y, arrivedState } = useScroll(el)
+const { left, right, top, bottom } = toRefs(arrivedState)
 
 // Format the numbers with toFixed() to make them
 // nicer to display
@@ -62,6 +63,22 @@ const displayY = computed({
               <input v-model="displayY" type="number" min="0" max="100" step="10" class="w-full !min-w-0">
             </div>
           </div>
+          <div text="right" opacity="75">
+            Top Arrived
+          </div>
+          {{ top }}
+          <div text="right" opacity="75">
+            Right Arrived
+          </div>
+          {{ right }}
+          <div text="right" opacity="75">
+            Bottom Arrived
+          </div>
+          {{ bottom }}
+          <div text="right" opacity="75">
+            Left Arrived
+          </div>
+          {{ left }}
         </div>
       </div>
     </div>

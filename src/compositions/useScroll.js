@@ -1,6 +1,8 @@
-import { computed, ref } from 'vue'
+import { computed, reactive, ref } from 'vue'
 import { toValue, unrefElement } from '@/helper'
 import { useEventListener } from '@/compositions/useEventListener'
+
+const ARRIVED_STATE_THRESHOLD_PIXELS = 1
 
 export function useScroll(element, options = {}) {
   const {
@@ -9,10 +11,23 @@ export function useScroll(element, options = {}) {
       capture: false,
       passive: true,
     },
+    offset = {
+      left: 0,
+      right: 0,
+      top: 0,
+      bottom: 0,
+    },
   } = options
 
   const internalX = ref(0)
   const internalY = ref(0)
+
+  const arrivedState = reactive({
+    left: true,
+    right: false,
+    top: true,
+    bottom: false,
+  })
 
   const x = computed({
     get() {
@@ -65,7 +80,24 @@ export function useScroll(element, options = {}) {
       || unrefElement(target)
     )
 
+    const { display, flexDirection } = getComputedStyle(el)
+
     const scrollLeft = el.scrollLeft
+
+    const left = Math.abs(scrollLeft) <= (offset.left || 0)
+    const right = Math.abs(scrollLeft)
+      + el.clientWidth >= el.scrollWidth
+      - (offset.right || 0)
+      - ARRIVED_STATE_THRESHOLD_PIXELS
+
+    if (display === 'flex' && flexDirection === 'row-reverse') {
+      arrivedState.left = right
+      arrivedState.right = left
+    }
+    else {
+      arrivedState.left = left
+      arrivedState.right = right
+    }
 
     internalX.value = scrollLeft
 
@@ -74,6 +106,21 @@ export function useScroll(element, options = {}) {
     // patch for mobile compatible
     if (target === window.document && !scrollTop)
       scrollTop = window.document.body.scrollTop
+
+    const top = Math.abs(scrollTop) <= (offset.top || 0)
+    const bottom = Math.abs(scrollTop)
+      + el.clientHeight >= el.scrollHeight
+      - (offset.bottom || 0)
+      - ARRIVED_STATE_THRESHOLD_PIXELS
+
+    if (display === 'flex' && flexDirection === 'column-reverse') {
+      arrivedState.top = bottom
+      arrivedState.bottom = top
+    }
+    else {
+      arrivedState.top = top
+      arrivedState.bottom = bottom
+    }
 
     internalY.value = scrollTop
   }
@@ -99,5 +146,6 @@ export function useScroll(element, options = {}) {
   return {
     x,
     y,
+    arrivedState,
   }
 }
