@@ -1,11 +1,16 @@
 import { computed, reactive, ref } from 'vue'
-import { toValue, unrefElement } from '@/helper'
+import { noop, toValue, unrefElement } from '@/helper'
+import { tryOnMounted } from '@/utils/shared'
 import { useEventListener } from '@/compositions/useEventListener'
+import { useDebounceFn } from '@/compositions/useDebounceFn'
 
 const ARRIVED_STATE_THRESHOLD_PIXELS = 1
 
 export function useScroll(element, options = {}) {
   const {
+    throttle = 0,
+    idle = 200,
+    onStop = noop,
     behavior = 'auto',
     eventListenerOptions = {
       capture: false,
@@ -17,15 +22,23 @@ export function useScroll(element, options = {}) {
       top: 0,
       bottom: 0,
     },
+    onError = (e) => { console.error(e) },
   } = options
 
   const internalX = ref(0)
   const internalY = ref(0)
 
+  const isScrolling = ref(false)
   const arrivedState = reactive({
     left: true,
     right: false,
     top: true,
+    bottom: false,
+  })
+  const directions = reactive({
+    left: false,
+    right: false,
+    top: false,
     bottom: false,
   })
 
@@ -70,6 +83,21 @@ export function useScroll(element, options = {}) {
       internalY.value = scrollContainer.scrollTop
   }
 
+  const onScrollEnd = (e) => {
+    // dedupe if support native scrollend event
+    if (!isScrolling.value)
+      return
+
+    isScrolling.value = false
+    directions.left = false
+    directions.right = false
+    directions.top = false
+    directions.bottom = false
+    onStop(e)
+  }
+
+  const onScrollEndDebounced = useDebounceFn(onScrollEnd, throttle + idle)
+
   const setArrivedState = (target) => {
     if (!window)
       return
@@ -83,6 +111,9 @@ export function useScroll(element, options = {}) {
     const { display, flexDirection } = getComputedStyle(el)
 
     const scrollLeft = el.scrollLeft
+
+    directions.left = scrollLeft < internalX.value
+    directions.right = scrollLeft > internalX.value
 
     const left = Math.abs(scrollLeft) <= (offset.left || 0)
     const right = Math.abs(scrollLeft)
@@ -106,6 +137,9 @@ export function useScroll(element, options = {}) {
     // patch for mobile compatible
     if (target === window.document && !scrollTop)
       scrollTop = window.document.body.scrollTop
+
+    directions.top = scrollTop < internalY.value
+    directions.bottom = scrollTop > internalY.value
 
     const top = Math.abs(scrollTop) <= (offset.top || 0)
     const bottom = Math.abs(scrollTop)
@@ -133,8 +167,22 @@ export function useScroll(element, options = {}) {
       (e.target).documentElement ?? e.target
     )
 
+    isScrolling.value = true
     setArrivedState(eventTarget)
+    onScrollEndDebounced(e)
   }
+
+  tryOnMounted(() => {
+    try {
+      const _element = toValue(element)
+      if (!_element)
+        return
+      setArrivedState(_element)
+    }
+    catch (e) {
+      onError(e)
+    }
+  })
 
   useEventListener(
     element,
@@ -143,9 +191,24 @@ export function useScroll(element, options = {}) {
     eventListenerOptions,
   )
 
+  useEventListener(
+    element,
+    'scrollend',
+    onScrollEnd,
+    eventListenerOptions,
+  )
+
   return {
     x,
     y,
+    isScrolling,
     arrivedState,
+    directions,
+    measure() {
+      const _element = toValue(element)
+
+      if (window && _element)
+        setArrivedState(_element)
+    },
   }
 }

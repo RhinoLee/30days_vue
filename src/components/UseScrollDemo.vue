@@ -3,8 +3,9 @@ import { computed, ref, toRefs } from 'vue'
 import { useScroll } from '@/compositions/useScroll'
 
 const el = ref(null)
-const { x, y, arrivedState } = useScroll(el)
+const { x, y, arrivedState, directions, isScrolling } = useScroll(el)
 const { left, right, top, bottom } = toRefs(arrivedState)
+const { left: toLeft, right: toRight, top: toTop, bottom: toBottom } = toRefs(directions)
 
 // Format the numbers with toFixed() to make them
 // nicer to display
@@ -51,6 +52,7 @@ const displayY = computed({
       </div>
       <div class="m-auto w-280px pl-4">
         <div class="px-6 py-4 rounded grid grid-cols-[120px_auto] gap-2 bg-gray-500/5">
+          <!-- position -->
           <span text="right" opacity="75" class="py-4">X Position</span>
           <div class="text-primary">
             <div>
@@ -63,6 +65,7 @@ const displayY = computed({
               <input v-model="displayY" type="number" min="0" max="100" step="10" class="w-full !min-w-0">
             </div>
           </div>
+          <!-- arrivedState -->
           <div text="right" opacity="75">
             Top Arrived
           </div>
@@ -79,6 +82,26 @@ const displayY = computed({
             Left Arrived
           </div>
           {{ left }}
+          <!-- directions -->
+          <div text="right" opacity="75">
+            Scrolling Up
+          </div>
+          {{ toTop }}
+          <div text="right" opacity="75">
+            Scrolling Right
+          </div>
+          {{ toRight }}
+          <div text="right" opacity="75">
+            Scrolling Down
+          </div>
+          {{ toBottom }}
+          <div text="right" opacity="75">
+            Scrolling Left
+          </div>
+          {{ toLeft }}
+          <!-- isScrolling -->
+          <span text="right" opacity="75">isScrolling</span>
+          {{ isScrolling }}
         </div>
       </div>
     </div>
