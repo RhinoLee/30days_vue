@@ -11,6 +11,7 @@ import UseParallaxDemo from './components/UseParallaxDemo.vue'
 import UseParallaxStyleDemo from './components/UseParallaxStyleDemo.vue'
 import UseDebounceFnDemo from './components/UseDebounceFnDemo.vue'
 import UseScrollDemo from './components/UseScrollDemo.vue'
+import UseIntersectionObserverDemo from './components/UseIntersectionObserverDemo.vue'
 import { useMouse } from '@/compositions/useMouse'
 
 const isHelloWorldVisible = ref(true)
@@ -45,6 +46,7 @@ function toggleHelloWorld() {
     <UseParallaxStyleDemo />
     <UseDebounceFnDemo />
     <UseScrollDemo />
+    <UseIntersectionObserverDemo />
   </main>
 </template>
 
