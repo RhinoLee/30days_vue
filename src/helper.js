@@ -16,3 +16,7 @@ export function unrefElement(elRef) {
   // 有 $el 的話是 vue component instance
   return plain?.$el ?? plain
 }
+
+export function notNullish(val) {
+  return val != null
+}

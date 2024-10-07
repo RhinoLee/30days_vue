@@ -1,4 +1,4 @@
-import { getCurrentInstance, nextTick, onMounted } from 'vue'
+import { getCurrentInstance, getCurrentScope, nextTick, onMounted, onScopeDispose } from 'vue'
 
 export function promiseTimeout(ms, throwOnTimeout = false, reason = 'Timeout') {
   return new Promise((resolve, reject) => {
@@ -21,4 +21,12 @@ export function tryOnMounted(fn, sync = true, target) {
     fn()
   else
     nextTick(fn)
+}
+
+export function tryOnScopeDispose(fn) {
+  if (getCurrentScope()) {
+    onScopeDispose(fn)
+    return true
+  }
+  return false
 }
