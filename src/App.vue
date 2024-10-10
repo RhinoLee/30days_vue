@@ -13,6 +13,7 @@ import UseDebounceFnDemo from './components/UseDebounceFnDemo.vue'
 import UseScrollDemo from './components/UseScrollDemo.vue'
 import UseIntersectionObserverDemo from './components/UseIntersectionObserverDemo.vue'
 import UseElementVisibilityDemo from './components/UseElementVisibilityDemo.vue'
+import UseInfiniteScrollDemo from './components/UseInfiniteScrollDemo.vue'
 import { useMouse } from '@/compositions/useMouse'
 
 const isHelloWorldVisible = ref(true)
@@ -40,6 +41,7 @@ function toggleHelloWorld() {
 
     <UseMouseInElementDemo />
     <UseElementVisibilityDemo />
+    <UseInfiniteScrollDemo />
     <UseThrottleFnDemo />
     <useMountedDemo />
     <UseDeviceOrientationDemo />
